@@ -1,0 +1,47 @@
+
+version: 2
+
+sources:
+  - name: VAULT_DB
+    schema: RAW_DATA
+    description: "Raw data from the retail project source systems."
+    tables:
+      - name: customers
+        description: "Raw data for customer information."
+        columns:
+          - name: customer_id
+            tests:
+              - not_null
+              - unique
+          - name: load_dts
+            tests:
+              - not_null
+
+
+      - name: account_details
+        description: "Raw data for customer bank accounts."
+        columns:
+          - name: account_id
+            tests:
+              - not_null
+              - unique
+          - name: customer_id
+            tests:
+              - not_null
+          - name: load_dts
+            tests:
+              - not_null
+
+      - name: transaction
+        description: "Raw data for financial transactions."
+        columns:
+          - name: transaction_id
+            tests:
+              - not_null
+              - unique
+          - name: account_id
+            tests:
+              - not_null
+          - name: load_dts
+            tests:
+              - not_null

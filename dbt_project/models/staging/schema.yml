@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Staging table for customers with hashed business keys for Data Vault."
+    columns:
+      - name: CUSTOMER_HK
+        description: "Primary Hash Key for the Customer."
+        tests:
+          - unique
+          - not_null
+      - name: CUSTOMER_ID
+        description: "Natural Business Key for the Customer."
+        tests:
+          - not_null
+      - name: FIRST_NAME
+        description: "Customer's first name."
+      - name: LAST_NAME
+        description: "Customer's last name."
+      - name: CUSTOMER_TYPE
+        description: "Type of customer (e.g., individual or corporate)."
+      - name: DATE_OF_BIRTH
+        description: "Customer's date of birth."
+      - name: EMAIL
+        description: "Customer's unique email address."
+        tests:
+          - unique
+      - name: ADDRESS
+        description: "Physical address of the customer."
+      - name: CREATED_AT
+        description: "Timestamp when the customer record was first created."
+
+  - name: stg_account_details
+    description: "Staging table for bank accounts containing balance and status information."
+    columns:
+      - name: ACCOUNT_HK
+        description: "Primary Hash Key for the Account."
+        tests:
+          - unique
+          - not_null
+      - name: ACCOUNT_ID
+        description: "Natural Business Key for the Account."
+        tests:
+          - not_null
+      - name: CUSTOMER_ID
+        description: "The ID of the customer who owns the account."
+      - name: ACCOUNT_TYPE
+        description: "Type of bank account (e.g., Savings, Checking)."
+      - name: BRANCH_CODE
+        description: "The branch where the account was created."
+      - name: BALANCE
+        description: "Current balance held in the account."
+      - name: STATUS
+        description: "Operational status of the account (e.g., Active, Closed)."
+      - name: OPEN_DATE
+        description: "Timestamp when the account was opened."
+
+  - name: stg_transaction
+    description: "Staging table for financial transactions capturing movement of funds."
+    columns:
+      - name: TRANSACTION_HK
+        description: "Primary Hash Key for the Transaction."
+        tests:
+          - unique
+          - not_null
+      - name: TRANSACTION_ID
+        description: "Natural Business Key for the Transaction."
+        tests:
+          - unique
+          - not_null
+      - name: ACCOUNT_ID
+        description: "The account associated with the transaction."
+      - name: TRANSACTION_DATE
+        description: "The timestamp when the transaction occurred."
+      - name: TRANSACTION_TYPE
+        description: "Category of transaction (e.g., Deposit, Withdrawl)."
+      - name: AMOUNT
+        description: "The numerical value of the transaction."
+        tests:
+          - not_null
+      - name: DESCRIPTION
+        description: "Textual description for the transaction."

@@ -1,0 +1,138 @@
+version: 2
+
+models:
+  - name: hub_customers
+    description: "Hub containing unique business keys for all customers."
+    columns:
+      - name: CUSTOMER_HK
+        description: "Primary Hash Key for the Customer Hub."
+        tests:
+          - unique
+          - not_null
+      - name: CUSTOMER_ID
+        description: "The original natural business key for the customer."
+        tests:
+          - unique
+          - not_null
+      - name: LOAD_DTS
+        description: "Timestamp when the business key was first loaded into the vault."
+      - name: RECORD_SOURCE
+        description: "The source system where the customer record originated."
+
+  - name: hub_account_details
+    description: "Hub containing unique business keys for all bank accounts."
+    columns:
+      - name: ACCOUNT_HK
+        description: "Primary Hash Key for the Account Hub."
+        tests:
+          - unique
+          - not_null
+      - name: ACCOUNT_ID
+        description: "The original natural business key for the account."
+        tests:
+          - unique
+          - not_null
+      - name: LOAD_DTS
+        description: "Timestamp when the business key was first loaded."
+      - name: RECORD_SOURCE
+        description: "The source system where the account record originated."
+
+  - name: hub_transaction
+    description: "Hub containing unique business keys for all financial transactions."
+    columns:
+      - name: TRANSACTION_HK
+        description: "Primary Hash Key for the Transaction Hub."
+        tests:
+          - unique
+          - not_null
+      - name: TRANSACTION_ID
+        description: "The original natural business key for the transaction."
+        tests:
+          - unique
+          - not_null
+      - name: LOAD_DTS
+        description: "Timestamp when the transaction key was first loaded into the vault."
+      - name: RECORD_SOURCE
+        description: "The source system where the transaction record originated."
+
+      
+  - name: link_account_customer
+    description: "Link table capturing the relationship between customers and their accounts."
+    columns:
+      - name: ACCOUNT_CUSTOMER_HK
+        description: "Primary Hash Key for the relationship link."
+        tests:
+          - unique
+          - not_null
+      - name: CUSTOMER_HK
+        description: "Foreign key to the Customer Hub."
+        tests:
+          - not_null
+      - name: ACCOUNT_HK
+        description: "Foreign key to the Account Hub."
+        tests:
+          - not_null
+      - name: LOAD_DTS
+        description: "Timestamp when this relationship was first recorded."
+      - name: RECORD_SOURCE
+        description: "Source system for the relationship data."
+
+  - name: link_account_transaction
+    description: "Link table capturing the relationship between accounts and transactions."
+    columns:
+      - name: TRANSACTION_ACCOUNT_HK
+        description: "Primary Hash Key for the relationship link."
+        tests:
+          - unique
+          - not_null
+      - name: TRANSACTION_HK
+        description: "Foreign key to the Transaction Hub."
+        tests:
+          - not_null
+      - name: ACCOUNT_HK
+        description: "Foreign key to the Account Hub."
+        tests:
+          - not_null
+      - name: LOAD_DTS
+        description: "Timestamp when this relationship was first recorded."
+      - name: RECORD_SOURCE
+        description: "Source system for the relationship data."
+
+
+  - name: sat_customers
+    description: "Satellite containing descriptive attributes for customers."
+  
+  - name: sat_account_details
+    description: "Satellite containing descriptive attributes for customer's account."
+
+  - name: sat_transaction
+    description: "Satellite containing descriptive attributes for financial transactions."
+
+
+  - name: pit_customers
+    description: "Point-in-Time table for Customers, used to link snapshots of satellite data at specific dates."
+    columns:
+      - name: CUSTOMER_HK
+        description: "Primary Hash Key for the customer being tracked."
+        tests:
+          - not_null
+      - name: AS_OF_DATE
+        description: "The specific snapshot date for which the record version is valid."
+        tests:
+          - not_null
+      - name: SAT_CUSTOMERS_LDTS
+        description: "The load timestamp of the valid record in sat_customers at this point in time."
+
+  - name: pit_account_details
+    description: "Point-in-Time table for Accounts, resolving which satellite records were active on given dates."
+    columns:
+      - name: ACCOUNT_HK
+        description: "Primary Hash Key for the account."
+        tests:
+          - not_null
+      - name: AS_OF_DATE
+        description: "The snapshot timestamp used for temporal joins."
+        tests:
+          - not_null
+      - name: SAT_ACCOUNT_DETAILS_LDTS
+        description: "The load timestamp of the valid record in the account details satellite."

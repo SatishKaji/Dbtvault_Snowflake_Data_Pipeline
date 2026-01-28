@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: fact_banking
+    description: "Central fact table for financial transactions, linking events to customers and accounts."
+    columns:
+      - name: TRANSACTION_ID
+        description: "The natural business key for the transaction."
+        tests:
+          - unique
+          - not_null
+      - name: ACCOUNT_ID
+        description: "Foreign key linking to the account dimension."
+      - name: CUSTOMER_ID
+        description: "Foreign key linking to the customer dimension."
+      - name: TRANSACTION_DATE
+        description: "The date and time the transaction occurred."
+      - name: AMOUNT
+        description: "The numerical value of the transaction."
+        tests:
+          - not_null
+      - name: TRANSACTION_TYPE
+        description: "Category of transaction."
+      - name: DESCRIPTION
+        description: "Textual description for the transaction."
+
+  - name: dim_customers
+    description: "Customer dimension providing point-in-time descriptive attributes."
+    columns:
+      - name: CUSTOMER_ID
+        description: "The original natural business key for the customer."
+        tests:
+          - not_null
+      - name: AS_OF_DATE
+        description: "The snapshot date for this version of the customer record."
+        tests:
+          - not_null
+      - name: FIRST_NAME
+        description: "Customer's first name at this point in time."
+      - name: LAST_NAME
+        description: "Customer's last name at this point in time."
+      - name: CUSTOMER_TYPE
+        description: "Type of customer at this point in time."
+      - name: DATE_OF_BIRTH
+        description: "Customer's date of birth."
+      - name: EMAIL
+        description: "Customer's unique email address at this point in time."
+      - name: ADDRESS
+        description: "Physical address of the customer at this point in time ."
+      - name: CREATED_AT
+        description: "Timestamp when the customer record was first created."
+
+  - name: dim_account_details
+    description: "Account dimension showing historical status and types."
+    columns:
+      - name: ACCOUNT_ID
+        description: "Natural Business Key for the Account."
+        tests:
+          - not_null
+      - name: AS_OF_DATE
+        description: "The snapshot date for this version of the account record."
+        tests:
+          - not_null
+      - name: STATUS
+        description: "The status of the account at this specific time."
+      - name: CUSTOMER_ID
+        description: "The ID of the customer who owns the account."
+      - name: ACCOUNT_TYPE
+        description: "Type of bank account."
+      - name: BRANCH_CODE
+        description: "The branch where the account was created."
+      - name: BALANCE
+        description: "Current balance held in the account at this point in time."
+      - name: STATUS
+        description: "Operational status of the account at this point in time."
+      - name: OPEN_DATE
+        description: "Timestamp when the account was opened."
