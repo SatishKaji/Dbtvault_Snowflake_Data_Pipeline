@@ -69,8 +69,8 @@ The project follows a standard dbt structure:
 ├── models/
 │   ├── staging/
 │   ├── analytics/
-│   ├──utils/
-│   ├──vaults/
+│   ├── utils/
+│   ├── vaults/
 │
 ├── macros/
 │
